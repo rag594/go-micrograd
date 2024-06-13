@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 )
 
 /*
@@ -33,24 +33,53 @@ x, y, q, z, f
 */
 
 func main() {
-	//h := 0.01
+	// inputs
+	x1 := ScalarValue(2.0, "x1")
+	x2 := ScalarValue(0.0, "x2")
 
-	x := ScalarValue(-2.0)
-	y := ScalarValue(5.0)
+	// weights
+	w1 := ScalarValue(-3.0, "w1")
+	w2 := ScalarValue(1.0, "w2")
 
-	q := x.Add(y)
+	// bias b
+	b := ScalarValue(6.8813735870195432, "b")
 
-	z := ScalarValue(-4)
+	// x1w1
+	x1w1 := x1.Mul(w1)
+	x1w1.Label = "x1w1"
 
-	// forward pass
-	f := q.Mul(z)
+	// x2w2
+	x2w2 := x2.Mul(w2)
+	x2w2.Label = "x2w2"
 
-	// backward pass
-	f.Grad = 1.0
+	// x1w1 + x2w2
+	x1w1x2w2 := x1w1.Add(x2w2)
+	x1w1x2w2.Label = "x1w1x2w2"
 
+	// x1w1 + x2w2 + b
+	n := x1w1x2w2.Add(b)
+	n.Label = "n"
+
+	// tanh(x1w1 + x2w2 + b)
+	out := n.tanh()
+	out.Label = "out"
+
+	// Initialize a new backward pass graph
 	backwardPassGraph := NewBackwardPassGraph()
 
-	f.backward(backwardPassGraph)
+	// (f(out+h) - f(h) / h) => 1
+	out.Grad = 1.0
 
-	fmt.Printf("%+v\n", f)
+	// backpropogate
+	out.backward(backwardPassGraph)
+
+	// initialise the tracer
+	t, err := NewTracer()
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	// Draw the expression graph for tracing
+	t.Draw(out)
 }

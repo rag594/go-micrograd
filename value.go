@@ -1,12 +1,14 @@
 package main
 
 import (
+	"math"
 	"slices"
 )
 
 const (
-	add = "+"
-	mul = "*"
+	add   = "+"
+	mul   = "*"
+	tanhC = "tanh"
 )
 
 // Value encapsulates the data and the corresponding nodes in the expression
@@ -17,6 +19,7 @@ type Value struct {
 	Grad         float64  // gradient of the expression
 	Op           string   // operation involved in the expression may or may not be empty
 	BackwardFunc func()   // backpropogate func to calculate the gradient/derivative
+	Label        string
 }
 
 // backward backpropogates to the expression to calculate the change/gradient of each node
@@ -41,10 +44,11 @@ func NewValue(data float64, children []*Value, op string) *Value {
 }
 
 // ScalarValue initialises the scalar value
-func ScalarValue(data float64) *Value {
+func ScalarValue(data float64, label string) *Value {
 	return &Value{
-		Data: data,
-		Grad: 0.0,
+		Data:  data,
+		Grad:  0.0,
+		Label: label,
 	}
 }
 
@@ -65,6 +69,18 @@ func (operandA *Value) Mul(operandB *Value) *Value {
 	backwardFunc := func() {
 		operandA.Grad += operandB.Data * out.Grad
 		operandB.Grad += operandA.Data * out.Grad
+	}
+	out.BackwardFunc = backwardFunc
+	return out
+}
+
+// tanh is the ops used in the expression
+func (operandA *Value) tanh() *Value {
+	x := operandA.Data
+	t := (math.Exp(2*x) - 1) / (math.Exp(2*x) + 1)
+	out := NewValue(t, []*Value{operandA}, tanhC)
+	backwardFunc := func() {
+		operandA.Grad += (1 - math.Pow(t, 2)) * out.Grad
 	}
 	out.BackwardFunc = backwardFunc
 	return out
