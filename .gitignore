@@ -1,2 +1,4 @@
 .idea/
 vendor
+examples/backpropogation/outimage.png
+examples/neuralNet/outimage.png

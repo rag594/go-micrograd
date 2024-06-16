@@ -38,22 +38,26 @@ func (t *Trace) createGraph(root *core.Value) {
 	if !t.Visited[root] {
 		t.Visited[root] = true
 		var r, op *cgraph.Node
-		r, _ = t.Graph.CreateNode(root.Label)
-		r.SetLabel(fmt.Sprintf("| data %.2f | grad %.2f |", root.Data, root.Grad))
-		r.SetXLabel(root.Label)
-		if root.Op != "" {
-			op, _ = t.Graph.CreateNode(root.Label + root.Op)
-			op.SetLabel(root.Op)
-			_, _ = t.Graph.CreateEdge("", op, r)
+		if root.Label != "" {
+			r, _ = t.Graph.CreateNode(root.Label)
+			r.SetLabel(fmt.Sprintf("| data %.2f | grad %.2f |", root.Data, root.Grad))
+			r.SetXLabel(root.Label)
+			if root.Op != "" {
+				op, _ = t.Graph.CreateNode(root.Label + root.Op)
+				op.SetLabel(root.Op)
+				_, _ = t.Graph.CreateEdge("", op, r)
+			}
 		}
 		for _, child := range root.Children {
-			c, _ := t.Graph.CreateNode(child.Label)
-			c.SetLabel(fmt.Sprintf("| data %.2f | grad %.2f |", child.Data, child.Grad))
-			c.SetXLabel(child.Label)
-			if op != nil {
-				_, _ = t.Graph.CreateEdge("", c, op)
-			} else {
-				_, _ = t.Graph.CreateEdge("", c, r)
+			if child.Label != "" {
+				c, _ := t.Graph.CreateNode(child.Label)
+				c.SetLabel(fmt.Sprintf("| data %.2f | grad %.2f |", child.Data, child.Grad))
+				c.SetXLabel(child.Label)
+				if op != nil {
+					_, _ = t.Graph.CreateEdge("", c, op)
+				} else {
+					_, _ = t.Graph.CreateEdge("", c, r)
+				}
 			}
 			t.createGraph(child)
 		}

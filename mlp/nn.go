@@ -64,15 +64,19 @@ func (l *Layer) Output(x []*core.Value) []*core.Value {
 	return outs
 }
 
+func randFloat(min, max float64) float64 {
+	return min + rand.Float64()*(max-min)
+}
+
 // NewNeuron initialises the neuron with ninput
 func NewNeuron(ninput int, layerLabel string) *Neuron {
 	weights := make([]*core.Value, 0)
 	for i := 0; i < ninput; i++ {
-		weights = append(weights, core.ScalarValue(rand.Float64(), fmt.Sprintf("%sw%d", layerLabel, i)))
+		weights = append(weights, core.ScalarValue(randFloat(-1.0, 1.0), fmt.Sprintf("%sw%d", layerLabel, i)))
 	}
 	return &Neuron{
 		Weights:    weights,
-		Bias:       core.ScalarValue(rand.Float64(), fmt.Sprintf("%sb", layerLabel)),
+		Bias:       core.ScalarValue(randFloat(-1.0, 1.0), fmt.Sprintf("%sb", layerLabel)),
 		LayerLabel: layerLabel,
 	}
 }

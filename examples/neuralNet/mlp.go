@@ -24,6 +24,11 @@ func main() {
 
 	f.Grad = 1.0
 
+	// Initialize a new backward pass graph
+	backwardPassGraph := core.NewBackwardPassGraph()
+
+	f.Backward(backwardPassGraph)
+
 	fmt.Println(f)
 
 	// initialise the tracer
@@ -32,11 +37,6 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-
-	// Initialize a new backward pass graph
-	backwardPassGraph := core.NewBackwardPassGraph()
-
-	f.Backward(backwardPassGraph)
 
 	t.Draw(f)
 }
