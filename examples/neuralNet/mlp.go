@@ -16,7 +16,7 @@ func main() {
 	// [3,4,4,1]
 	l := mlp.NewMLP(3, []int{4, 4, 1})
 
-	d := l.MLPOutut(x)
+	d := l.Output(x)
 	d.Label = "g"
 
 	f := d.Tanh()

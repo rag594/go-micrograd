@@ -36,8 +36,8 @@ func NewMLP(ninput int, noutputs []int) *MLP {
 	return &MLP{Layers: layers}
 }
 
-// MLPOutut calculates the final output given the input x
-func (m *MLP) MLPOutut(x []*core.Value) *core.Value {
+// Outut calculates the final output given the input x
+func (m *MLP) Output(x []*core.Value) *core.Value {
 	for _, layer := range m.Layers {
 		x = layer.Output(x)
 	}
