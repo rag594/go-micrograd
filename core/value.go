@@ -1,4 +1,4 @@
-package main
+package core
 
 import (
 	"math"
@@ -23,7 +23,7 @@ type Value struct {
 }
 
 // backward backpropogates to the expression to calculate the change/gradient of each node
-func (operandA *Value) backward(backwardPassGraph *BackwardPassGraph) {
+func (operandA *Value) Backward(backwardPassGraph *BackwardPassGraph) {
 	backwardPassGraph.buildBackwardPassOrder(operandA)
 	slices.Reverse(*backwardPassGraph.deps)
 	for _, val := range *backwardPassGraph.deps {
@@ -75,7 +75,7 @@ func (operandA *Value) Mul(operandB *Value) *Value {
 }
 
 // tanh is the ops used in the expression
-func (operandA *Value) tanh() *Value {
+func (operandA *Value) Tanh() *Value {
 	x := operandA.Data
 	t := (math.Exp(2*x) - 1) / (math.Exp(2*x) + 1)
 	out := NewValue(t, []*Value{operandA}, tanhC)

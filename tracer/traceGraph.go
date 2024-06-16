@@ -1,4 +1,4 @@
-package main
+package tracer
 
 import (
 	"bytes"
@@ -9,13 +9,14 @@ import (
 
 	"github.com/goccy/go-graphviz"
 	"github.com/goccy/go-graphviz/cgraph"
+	"github.com/rag594/go-micrograd/core"
 )
 
 // Trace represents the state of graph of expression to be traced/drawn
 type Trace struct {
 	Graph   *cgraph.Graph
 	Viz     *graphviz.Graphviz
-	Visited map[*Value]bool
+	Visited map[*core.Value]bool
 }
 
 // NewTracer initialises the Trace
@@ -29,11 +30,11 @@ func NewTracer() (*Trace, error) {
 
 	graph.SetRankDir(cgraph.LRRank)
 
-	return &Trace{Graph: graph, Viz: g, Visited: make(map[*Value]bool)}, nil
+	return &Trace{Graph: graph, Viz: g, Visited: make(map[*core.Value]bool)}, nil
 }
 
 // createGraph traverses the graph in dfs fashion and creates visual nodes
-func (t *Trace) createGraph(root *Value) {
+func (t *Trace) createGraph(root *core.Value) {
 	if !t.Visited[root] {
 		t.Visited[root] = true
 		var r, op *cgraph.Node
@@ -60,7 +61,7 @@ func (t *Trace) createGraph(root *Value) {
 }
 
 // Draw render the graph's image in a file
-func (t *Trace) Draw(v *Value) {
+func (t *Trace) Draw(v *core.Value) {
 	t.createGraph(v)
 	var buf bytes.Buffer
 	if err := t.Viz.Render(t.Graph, graphviz.PNG, &buf); err != nil {

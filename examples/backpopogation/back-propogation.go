@@ -2,6 +2,9 @@ package main
 
 import (
 	"log"
+
+	"github.com/rag594/go-micrograd/core"
+	"github.com/rag594/go-micrograd/tracer"
 )
 
 /*
@@ -34,15 +37,15 @@ x, y, q, z, f
 
 func main() {
 	// inputs
-	x1 := ScalarValue(2.0, "x1")
-	x2 := ScalarValue(0.0, "x2")
+	x1 := core.ScalarValue(2.0, "x1")
+	x2 := core.ScalarValue(0.0, "x2")
 
 	// weights
-	w1 := ScalarValue(-3.0, "w1")
-	w2 := ScalarValue(1.0, "w2")
+	w1 := core.ScalarValue(-3.0, "w1")
+	w2 := core.ScalarValue(1.0, "w2")
 
 	// bias b
-	b := ScalarValue(6.8813735870195432, "b")
+	b := core.ScalarValue(6.8813735870195432, "b")
 
 	// x1w1
 	x1w1 := x1.Mul(w1)
@@ -61,20 +64,20 @@ func main() {
 	n.Label = "n"
 
 	// tanh(x1w1 + x2w2 + b)
-	out := n.tanh()
+	out := n.Tanh()
 	out.Label = "out"
 
 	// Initialize a new backward pass graph
-	backwardPassGraph := NewBackwardPassGraph()
+	backwardPassGraph := core.NewBackwardPassGraph()
 
 	// (f(out+h) - f(h) / h) => 1
 	out.Grad = 1.0
 
 	// backpropogate
-	out.backward(backwardPassGraph)
+	out.Backward(backwardPassGraph)
 
 	// initialise the tracer
-	t, err := NewTracer()
+	t, err := tracer.NewTracer()
 
 	if err != nil {
 		log.Fatalln(err)
@@ -82,4 +85,5 @@ func main() {
 
 	// Draw the expression graph for tracing
 	t.Draw(out)
+
 }

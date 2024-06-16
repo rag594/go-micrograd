@@ -1,4 +1,4 @@
-package main
+package core
 
 // BackwardPassGraph maintains the visited and dependency state
 type BackwardPassGraph struct {
