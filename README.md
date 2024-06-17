@@ -24,6 +24,6 @@ foo@bar:~$ cd examples/mlp
 foo@bar:~$ go run .
 ```
 
-**_NOTE:_**  The image is created as `mlp.png` under examples/backpropogation package
+**_NOTE:_**  The image is created as `outimage.png` under examples/mlp package
 
 ##### inspired from https://github.com/karpathy/micrograd
