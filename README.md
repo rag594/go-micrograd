@@ -15,6 +15,12 @@ foo@bar:~$ go run .
 
 ### Multi Layer Perceptron - With expression graph
 
+Below is a MLP(3,4,4,1) of which expression graph is visualized
+
+![image](assets/mlp_example.png)
+
+Expression graph of above MLP
+
 ![image](assets/mlp.png)
 
 #### To run the example of backpropogation
