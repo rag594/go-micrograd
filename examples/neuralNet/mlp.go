@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/rag594/go-micrograd/core"
@@ -16,20 +15,19 @@ func main() {
 	// [3,4,4,1]
 	l := mlp.NewMLP(3, []int{4, 4, 1})
 
+	// forward pass
 	d := l.Output(x)
 	d.Label = "g"
 
+	// apply activation
 	f := d.Tanh()
 	f.Label = "final"
-
-	f.Grad = 1.0
 
 	// Initialize a new backward pass graph
 	backwardPassGraph := core.NewBackwardPassGraph()
 
+	// backward pass - back propogation
 	f.Backward(backwardPassGraph)
-
-	fmt.Println(f)
 
 	// initialise the tracer
 	t, err := tracer.NewTracer()

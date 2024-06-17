@@ -24,6 +24,7 @@ type Value struct {
 
 // backward backpropogates to the expression to calculate the change/gradient of each node
 func (operandA *Value) Backward(backwardPassGraph *BackwardPassGraph) {
+	operandA.Grad = 1.0
 	backwardPassGraph.buildBackwardPassOrder(operandA)
 	slices.Reverse(*backwardPassGraph.deps)
 	for _, val := range *backwardPassGraph.deps {

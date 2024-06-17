@@ -59,21 +59,18 @@ func main() {
 	x1w1x2w2 := x1w1.Add(x2w2)
 	x1w1x2w2.Label = "x1w1x2w2"
 
-	// x1w1 + x2w2 + b
+	// x1w1 + x2w2 + b - forward pass
 	n := x1w1x2w2.Add(b)
 	n.Label = "n"
 
-	// tanh(x1w1 + x2w2 + b)
+	// tanh(x1w1 + x2w2 + b) - apply activation
 	out := n.Tanh()
 	out.Label = "out"
 
 	// Initialize a new backward pass graph
 	backwardPassGraph := core.NewBackwardPassGraph()
 
-	// (f(out+h) - f(h) / h) => 1
-	out.Grad = 1.0
-
-	// backpropogate
+	// backpropogate - backward pass
 	out.Backward(backwardPassGraph)
 
 	// initialise the tracer
